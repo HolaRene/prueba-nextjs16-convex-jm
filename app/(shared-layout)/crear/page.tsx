@@ -6,10 +6,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { api } from "@/convex/_generated/api"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "convex/react"
+import { Loader } from "lucide-react"
+import { useTransition } from "react"
 import { Controller, useForm } from "react-hook-form"
+import z from "zod"
 
 const CrearPage = () => {
+    const [isPending, startTransition] = useTransition()
+    const crearBlogMutation = useMutation(api.blogs.crearBlog)
     const form = useForm({
         resolver: zodResolver(blogSPostchema),
         defaultValues: {
@@ -17,6 +24,16 @@ const CrearPage = () => {
             contenido: '',
         }
     })
+
+    function onSubmit(valores: z.infer<typeof blogSPostchema>) {
+        startTransition(() => {
+            crearBlogMutation({
+                titulo: valores.titulo,
+                cuerpo: valores.contenido,
+            })
+        })
+
+    }
     return (
         <div className='py-12'>
             <div className="text-center pb-3">
@@ -30,7 +47,7 @@ const CrearPage = () => {
                 </CardHeader>
                 {/* Formulario para crear un blog */}
                 <CardContent>
-                    <form>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
                         {/* Aquí irán los campos del formulario */}
                         <FieldGroup>
                             <Controller
@@ -61,8 +78,13 @@ const CrearPage = () => {
 
                                 )}
                             />
-                            <Button>
-                                Crear Blog
+                            <Button disabled={isPending}>
+                                {
+                                    isPending ? <>
+                                        <Loader className="animate-spin mr-2 h-4 w-4" />
+                                        <span>Cargando...</span>
+                                    </> : "Crear Blog"
+                                }
                             </Button>
                         </FieldGroup>
                     </form>
