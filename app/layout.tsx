@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aplication with Convex and Next.js",
+  title: "App blogs next16 convex",
   description: "Aplicación flexible con Convex y Next.js 16",
 };
 
