@@ -25,3 +25,14 @@ export const obtenerBlogs = query({
         return blogs;
     }
 })
+
+export const generarImageSubidaUrl = mutation({
+    args:{},
+    handler:async(ctx)=>{
+         const usuario = await authComponent.safeGetAuthUser(ctx)
+        if(!usuario){
+            throw new Error("Usuario no autenticado");
+        }
+        return await ctx.storage.generateUploadUrl()
+    }
+})

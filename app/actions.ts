@@ -16,6 +16,26 @@ export async function crearBlogAction(valores: z.infer<typeof blogSPostchema>) {
     }
     // obtener el token del usuario
     const token = await getToken()
+try {
+    const imgBlogUrl = fetchMutation(api.blogs.generarImageSubidaUrl, {},{token})
+    const subirResultados = await fetch(imgBlogUrl, {
+        method: "POST",
+        headers:{
+            "Content-Type":parsed.data.img.type
+        },
+        body:parsed.data.img
+    })
+    if(!subirResultados.ok){
+        return{
+            error: "Error al subir la imagen"
+        }
+    }
+    const {storageId} = await subirResultados.json()
+
+} catch (error) {
+    console.log('error flexi en crear blog')
+}
+
     // llamar a la mutacion para crear el blog
     await fetchMutation(api.blogs.crearBlog,{
         titulo: parsed.data.titulo,

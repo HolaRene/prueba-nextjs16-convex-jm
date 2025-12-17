@@ -22,6 +22,7 @@ const CrearPage = () => {
         defaultValues: {
             titulo: 'Primer Blog',
             contenido: '',
+            img: undefined
         }
     })
 
@@ -58,6 +59,27 @@ const CrearPage = () => {
                                         {fieldState.invalid && (
                                             <FieldError errors={[fieldState.error]} />
                                         )}
+                                    </Field>
+
+                                )}
+                            />
+                            <Controller
+                                control={form.control}
+                                name="img"
+                                render={({ field, fieldState }) => (
+                                    <Field>
+                                        <FieldLabel>Imagen del Blog</FieldLabel>
+                                        <Input type="file" aria-invalid={fieldState.invalid} placeholder="Título del blog"
+                                            accept="image/*"
+                                            onChange={(event) => {
+                                                const archivo = event.target.files?.[0]
+                                                field.onChange(archivo)
+                                            }}
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError errors={[fieldState.error]} />
+                                        )}
+
                                     </Field>
 
                                 )}
