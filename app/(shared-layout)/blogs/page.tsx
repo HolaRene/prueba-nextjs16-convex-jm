@@ -1,6 +1,7 @@
 
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { api } from "@/convex/_generated/api"
 import { fetchQuery } from "convex/nextjs"
 import Image from "next/image"
@@ -17,7 +18,7 @@ const BlogPage = () => {
                 <p className="pt-4 max-w-2xl mx-auto text-xl text-muted-foreground">Piensa cerebro, pon tus ideas en ese blogs</p>
             </div>
             {/* Estreaming */}
-            <Suspense fallback={<div>Cargando blogs...</div>}>
+            <Suspense fallback={<SkeletonLaodingUI />}>
                 <LoadBlog />
             </Suspense>
         </div>
@@ -25,7 +26,7 @@ const BlogPage = () => {
 }
 
 async function LoadBlog() {
-    await new Promise((resolve) => setTimeout(resolve, 2000)); // Simula una demora de 5 segundo
+    await new Promise((resolve) => setTimeout(resolve, 5000)); // Simula una demora de 5 segundo
     // Fetch blogs del lado del servidor
     const data = await fetchQuery(api.blogs.obtenerBlogs)
     return (
@@ -53,6 +54,21 @@ async function LoadBlog() {
                     </CardFooter>
                 </Card>
             ))}
+        </div>
+    )
+}
+
+function SkeletonLaodingUI() {
+    return (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[1, 2, 3].map((_, i) => <div className="flex flex-col space-y-3" key={i}>
+                <Skeleton className="h-48 w-full rounded-lg" />
+                <div className="space-y-2 flex flex-col">
+                    <Skeleton className="h-8 w-3/4 rounded-lg" />
+                    <Skeleton className="h-4 w-full rounded-lg" />
+                    <Skeleton className="h-4 w-full" />
+                </div>
+            </div>)}
         </div>
     )
 }
