@@ -21,7 +21,7 @@ const Nabvar = () => {
                 </Link>
                 <div className="flex items-center gap-2">
                     <Link className={buttonVariants({ variant: "ghost" })} href={'/'}>Inicio</Link>
-                    <Link className={buttonVariants({ variant: "ghost" })} href={'/blog'}>Blog</Link>
+                    <Link className={buttonVariants({ variant: "ghost" })} href={'/blogs'}>Blog</Link>
                     <Link className={buttonVariants({ variant: "ghost" })} href={'/crear'}>Crear</Link>
                 </div>
             </div>

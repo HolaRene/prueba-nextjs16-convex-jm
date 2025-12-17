@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
 
 export const crearBlog = mutation({
@@ -15,5 +15,13 @@ export const crearBlog = mutation({
             autorId: usuario._id,
         });
         return nuevoBlog;
+    }
+})
+
+export const obtenerBlogs = query({
+    args:{},
+    handler: async (ctx) => {
+        const blogs = await ctx.db.query("blogs").order("desc").collect();
+        return blogs;
     }
 })
