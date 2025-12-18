@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: "images.pexels.com",
         protocol: "https",
         port: "",
+      },
+      {
+        hostname: "frugal-octopus-136.convex.cloud",
+        protocol: "https",
+        port: "",
       }
     ]
   }

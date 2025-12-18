@@ -8,9 +8,10 @@ import Image from "next/image"
 import Link from "next/link"
 import { Suspense } from "react"
 
+export const dynamic = "force-static" // "auto" | "error" | "force-static" | "force-dynamic"
+export const revalidate = 30// 0 | number | false > en segundos.
+
 const BlogPage = () => {
-
-
     return (
         <div className='py-12'>
             <div className="text-center pb-12">
@@ -26,7 +27,7 @@ const BlogPage = () => {
 }
 
 async function LoadBlog() {
-    await new Promise((resolve) => setTimeout(resolve, 5000)); // Simula una demora de 5 segundo
+    // await new Promise((resolve) => setTimeout(resolve, 5000)); // Simula una demora de 5 segundo
     // Fetch blogs del lado del servidor
     const data = await fetchQuery(api.blogs.obtenerBlogs)
     return (
@@ -36,19 +37,19 @@ async function LoadBlog() {
                     <div className="h-48 w-full overflow-hidden relative">
                         <Image
                             alt="imgs"
-                            src={"https://images.pexels.com/photos/34605404/pexels-photo-34605404.jpeg"}
+                            src={blog.image ?? "https://images.pexels.com/photos/34605404/pexels-photo-34605404.jpeg"}
                             fill
-                            className="rounded-t-lg"
+                            className="rounded-t-lg object-cover"
                         />
                     </div>
                     <CardContent>
-                        <Link href={`blog/${blog._id}`}>
+                        <Link href={`blogs/${blog._id}`}>
                             <h1 className="text-2xl font-bold hover:text-primary"> {blog.titulo}</h1>
                         </Link>
                         <p className="text-muted-foreground line-clamp-3">{blog.cuerpo}</p>
                     </CardContent>
                     <CardFooter>
-                        <Link className={buttonVariants({ className: "w-full" })} href={`blog/${blog._id}`}>
+                        <Link className={buttonVariants({ className: "w-full" })} href={`blogs/${blog._id}`}>
                             Leer más.
                         </Link>
                     </CardFooter>

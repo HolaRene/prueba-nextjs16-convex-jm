@@ -3,7 +3,7 @@ import { mutation, query } from "./_generated/server";
 import { authComponent } from "./auth";
 
 export const crearBlog = mutation({
-    args:{titulo: v.string(), cuerpo: v.string(),},
+    args:{titulo: v.string(), cuerpo: v.string(),image:v.id("_storage")},
     handler: async (ctx, args)=>{
         const usuario = await authComponent.safeGetAuthUser(ctx)
         if(!usuario){
@@ -13,6 +13,7 @@ export const crearBlog = mutation({
             titulo: args.titulo,
             cuerpo: args.cuerpo,
             autorId: usuario._id,
+            imageStorageId: args.image
         });
         return nuevoBlog;
     }
@@ -21,8 +22,18 @@ export const crearBlog = mutation({
 export const obtenerBlogs = query({
     args:{},
     handler: async (ctx) => {
+
         const blogs = await ctx.db.query("blogs").order("desc").collect();
-        return blogs;
+        return Promise.all(
+            blogs.map(async (blog)=>{
+                const resolverImgURl = blog.imageStorageId !== undefined ? await ctx.storage.getUrl(blog.imageStorageId): null
+                return {
+                      ...blog,
+                      image: resolverImgURl
+                  }
+                })          
+        )
+       
     }
 })
 
