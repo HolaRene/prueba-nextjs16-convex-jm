@@ -3,5 +3,5 @@ import z from "zod";
 
 export const comentariosSquemas = z.object({
     cuerpo:z.string().min(3),
-    blogId:z.custom<Id<"comentarios">>()
+    blogId:z.custom<Id<"blogs">>()
 })
