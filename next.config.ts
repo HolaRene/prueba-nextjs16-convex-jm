@@ -15,7 +15,8 @@ const nextConfig: NextConfig = {
         port: "",
       }
     ]
-  }
+  },
+  cacheComponents:true
 };
 
 export default nextConfig;

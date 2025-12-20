@@ -1,4 +1,5 @@
 "use server"
+
 import { fetchMutation } from 'convex/nextjs'
 
 import z from "zod"
@@ -6,10 +7,9 @@ import { blogSPostchema } from "./esquemas/blog"
 import { api } from '@/convex/_generated/api'
 import { redirect } from 'next/navigation'
 import { getToken } from '@/lib/auth-server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, updateTag } from 'next/cache'
 
 export async function crearBlogAction(valores: z.infer<typeof blogSPostchema>) {
-   
 try {
      // verificar los datos con zod
     const parsed = blogSPostchema.safeParse(valores)
@@ -48,6 +48,7 @@ try {
             error: "Error al crear el blog"
         }
 }
-    revalidatePath('/blogs')
+updateTag("blog")
+    // revalidatePath('/blogs') no utilizar si se usa con cache, se utiliza con dynamic. export const 
     return redirect('/blogs')
 }

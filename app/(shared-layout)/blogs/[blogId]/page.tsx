@@ -1,13 +1,16 @@
 import { buttonVariants } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import BlogsPresence from "@/components/web/BlogsPresence"
 import CommentarioSection from "@/components/web/CommentarioSection"
 import { api } from "@/convex/_generated/api"
 import { Id } from "@/convex/_generated/dataModel"
+import { getToken } from "@/lib/auth-server"
 import { fetchQuery, preloadQuery } from "convex/nextjs"
 import { ArrowLeft } from "lucide-react"
 import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 
 interface BlogIdProps {
     params: Promise<{
@@ -32,12 +35,17 @@ export async function generateMetadata({ params }: BlogIdProps): Promise<Metadat
 
 const BlogId = async ({ params }: BlogIdProps) => {
     const { blogId } = await params
-    // Total: 200ms (el tiempo del más lento)
-    const [blog, preloadedComents] = await Promise.all([
-        await fetchQuery(api.blogs.obtenerBlogPorId, { blogId: blogId }),
 
-        await preloadQuery(api.comentarios.obtenerComentariosByBlogId, { blogId: blogId })
+    const token = await getToken()
+    // Total: 200ms (el tiempo del más lento)
+    const [blog, preloadedComents, userId] = await Promise.all([
+        await fetchQuery(api.blogs.obtenerBlogPorId, { blogId: blogId }),
+        await preloadQuery(api.comentarios.obtenerComentariosByBlogId, { blogId: blogId }),
+        await fetchQuery(api.presencia.obtenerUserId, {}, { token })
     ])
+    if (!userId) {
+        return redirect('/auth/iniciar-sesion')
+    }
     if (!blog) {
         return <div>
             <h1 className="text-6xl font-bold py-12 text-red-500">Hola muy bien</h1>
@@ -54,7 +62,12 @@ const BlogId = async ({ params }: BlogIdProps) => {
             </div>
             <div className="space-y-4 flex flex-col">
                 <h1 className="text-4xl font-bold tracking-tight text-foreground">{blog.titulo}</h1>
-                <p className="text-sm text-muted-foreground">Creado en: {new Date(blog._creationTime).toLocaleDateString()}</p>
+                <div className="flex gap-4 items-center">
+                    <p className="text-sm text-muted-foreground">Creado en: {new Date(blog._creationTime).toLocaleDateString()}</p>
+                    {
+                        userId && <BlogsPresence roomId={blogId} usuarioId={userId} />
+                    }
+                </div>
             </div>
             <Separator className="my-8" />
             <p className="text-lg leading-relaxed text-foreground/90">{blog.cuerpo}</p>

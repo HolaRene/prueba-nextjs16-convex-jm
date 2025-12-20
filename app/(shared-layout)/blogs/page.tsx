@@ -5,12 +5,15 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { api } from "@/convex/_generated/api"
 import { fetchQuery } from "convex/nextjs"
 import { Metadata } from "next"
+import { cacheLife, cacheTag } from "next/cache"
 import Image from "next/image"
 import Link from "next/link"
+import { connection } from "next/server"
 import { Suspense } from "react"
 
-export const dynamic = "force-static" // "auto" | "error" | "force-static" | "force-dynamic"
-export const revalidate = 30// 0 | number | false > en segundos.
+// si se utiliza cacheComponents esto debe de comentarse
+// export const dynamic = "force-static" // "auto" | "error" | "force-static" | "force-dynamic"
+// export const revalidate = 30// 0 | number | false > en segundos.
 
 export const metadata: Metadata = {
     title: "mi blog",
@@ -29,14 +32,19 @@ const BlogPage = () => {
                 <p className="pt-4 max-w-2xl mx-auto text-xl text-muted-foreground">Piensa cerebro, pon tus ideas en ese blogs</p>
             </div>
             {/* Estreaming */}
-            <Suspense fallback={<SkeletonLaodingUI />}>
-                <LoadBlog />
-            </Suspense>
+            {/* <Suspense fallback={<SkeletonLaodingUI />}> no se utiliza con cache */}
+            <LoadBlog />
+            {/* </Suspense> */}
         </div>
     )
 }
 
 async function LoadBlog() {
+    // evitar un erro cuando se pasa true en next.config el cachaComponent
+    // await connection()
+    "use cache" // se revalida cada 15 min por defecto.
+    cacheLife("hours") // editarlo a hora
+    cacheTag("blog")
     // await new Promise((resolve) => setTimeout(resolve, 5000)); // Simula una demora de 5 segundo
     // Fetch blogs del lado del servidor
     const data = await fetchQuery(api.blogs.obtenerBlogs)
