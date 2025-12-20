@@ -4,12 +4,22 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { api } from "@/convex/_generated/api"
 import { fetchQuery } from "convex/nextjs"
+import { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { Suspense } from "react"
 
 export const dynamic = "force-static" // "auto" | "error" | "force-static" | "force-dynamic"
 export const revalidate = 30// 0 | number | false > en segundos.
+
+export const metadata: Metadata = {
+    title: "mi blog",
+    description: "...flexis",
+    category: "Web nexts",
+    authors: [{
+        name: "Don joe"
+    }]
+}
 
 const BlogPage = () => {
     return (

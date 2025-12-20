@@ -12,7 +12,7 @@ import { toast } from "sonner"
 import z from "zod"
 import { useParams } from "next/navigation"
 import { Id } from "@/convex/_generated/dataModel"
-import { useMutation, useQuery } from "convex/react"
+import { Preloaded, useMutation, usePreloadedQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { Avatar, AvatarFallback } from "../ui/avatar"
 import { AvatarImage } from "@radix-ui/react-avatar"
@@ -20,7 +20,9 @@ import { Separator } from "@radix-ui/react-dropdown-menu"
 
 
 
-const CommentarioSection = () => {
+const CommentarioSection = (props: {
+    preploadedComents: Preloaded<typeof api.comentarios.obtenerComentariosByBlogId>
+}) => {
     const params = useParams<{ blogId: Id<"blogs"> }>()
 
     const [isPending, startTransition] = useTransition()
@@ -33,7 +35,8 @@ const CommentarioSection = () => {
     })
 
     const crearComentario = useMutation(api.comentarios.crearComentarios)
-    const comentarios = useQuery(api.comentarios.obtenerComentariosByBlogId, { blogId: params.blogId })
+    // usePreloadedQuery "resume" la suscripción usando el ticket
+    const comentarios = usePreloadedQuery(props.preploadedComents)
 
 
     function onSubmit(valores: z.infer<typeof comentariosSquemas>) {
