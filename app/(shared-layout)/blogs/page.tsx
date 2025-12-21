@@ -1,14 +1,15 @@
 
-import { buttonVariants } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { api } from "@/convex/_generated/api"
-import { fetchQuery } from "convex/nextjs"
-import { Metadata } from "next"
-import { cacheLife, cacheTag } from "next/cache"
-import Image from "next/image"
-import Link from "next/link"
-import { Suspense } from "react"
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { api } from "@/convex/_generated/api";
+import { fetchQuery } from "convex/nextjs";
+import { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
+import Image from "next/image";
+import Link from "next/link";
+import { Suspense } from "react";
+
 
 // si se utiliza cacheComponents esto debe de comentarse
 // export const dynamic = "force-static" // "auto" | "error" | "force-static" | "force-dynamic"
@@ -23,7 +24,7 @@ export const metadata: Metadata = {
     }]
 }
 
-const BlogPage = () => {
+export default function BlogPage() {
     return (
         <div className='py-12'>
             <div className="text-center pb-12">
@@ -90,4 +91,3 @@ function SkeletonLaodingUI() {
         </div>
     )
 }
-export default BlogPage
