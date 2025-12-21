@@ -8,6 +8,7 @@ import { Metadata } from "next"
 import { cacheLife, cacheTag } from "next/cache"
 import Image from "next/image"
 import Link from "next/link"
+import { Suspense } from "react"
 
 // si se utiliza cacheComponents esto debe de comentarse
 // export const dynamic = "force-static" // "auto" | "error" | "force-static" | "force-dynamic"
@@ -30,9 +31,9 @@ const BlogPage = () => {
                 <p className="pt-4 max-w-2xl mx-auto text-xl text-muted-foreground">Piensa cerebro, pon tus ideas en ese blogs</p>
             </div>
             {/* Estreaming */}
-            {/* <Suspense fallback={<SkeletonLaodingUI />}> no se utiliza con cache */}
-            <LoadBlog />
-            {/* </Suspense> */}
+            <Suspense fallback={<SkeletonLaodingUI />}>
+                <LoadBlog />
+            </Suspense>
         </div>
     )
 }
