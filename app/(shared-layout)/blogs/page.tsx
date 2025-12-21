@@ -8,8 +8,6 @@ import { Metadata } from "next"
 import { cacheLife, cacheTag } from "next/cache"
 import Image from "next/image"
 import Link from "next/link"
-import { connection } from "next/server"
-import { Suspense } from "react"
 
 // si se utiliza cacheComponents esto debe de comentarse
 // export const dynamic = "force-static" // "auto" | "error" | "force-static" | "force-dynamic"
@@ -46,8 +44,8 @@ async function LoadBlog() {
     cacheLife("hours") // editarlo a hora
     cacheTag("blog")
     // await new Promise((resolve) => setTimeout(resolve, 5000)); // Simula una demora de 5 segundo
-    // Fetch blogs del lado del servidor
-    const data = await fetchQuery(api.blogs.obtenerBlogs)
+    // Fetch blogs del lado del servidor (esta query no recibe argumentos, por eso se pasa {})
+    const data = await fetchQuery(api.blogs.obtenerBlogs, {})
     return (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {data?.map((blog) => (
